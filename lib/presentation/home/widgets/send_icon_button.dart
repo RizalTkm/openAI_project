@@ -14,7 +14,7 @@ class SendIconButton extends StatelessWidget {
       child: IconButton(onPressed: ()async {
 
         try {
-        await   ApiServices.getQueryResponse();
+       // await   ApiServices.getQueryResponse();
           
         } catch (e) {
 

@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:chat_gpt_application/constants/api_helpers.dart';
+import 'package:chat_gpt_application/models/aiModels_response_model.dart';
 
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
@@ -8,48 +10,38 @@ import 'package:http/http.dart' as http;
 class ApiServices {
   final _dio = Dio(BaseOptions(
       baseUrl: ApiHelpers.baseUrl,
-      headers: {"Authorization": "Bearer${ApiHelpers.apikeys}"}));
+      headers: {"Authorization": "Bearer ${ApiHelpers.apikeys}"}));
 
   getAiModels() async {
     print("function called");
     try {
       final response = await _dio.get("/models");
 
-      print(response.data);
+      final resultList =
+          AimodelsResponseModel.fromJson(response.data).data?.toList();
+
+      var list = [];
+
+      for (var i in resultList!) {
+        list.add(i.id);
+      }
+
+      print(list);
+
+      return list;
     } catch (e) {
       print(e);
     }
   }
 
   static getAiModelsHttp() async {
-    var parsedUri = Uri.parse("$baseUrl/models");
-    var headerData = {'Authorization': 'Bearer $OPENAI_API_KEY'};
+    try {
+      var response = await http.get(Uri.parse("$baseUrl/models"),
+          headers: {'Authorization': 'Bearer $OPENAI_API_KEY'});
 
-    var result = await http.get(parsedUri, headers: headerData);
-
-    if (result.statusCode == 200) {
-      print(result.body);
-    } else {
-      print(result.statusCode);
+      print(response.body);
+    } catch (e) {
+      print(e);
     }
-  }
-
-  static getQueryResponse() async {
-    var parsedUri = Uri.parse("$baseUrl/chat/completions");
-    var headerData = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $OPENAI_API_KEY"
-    };
-    var bodyData = jsonEncode({
-      "model": "gpt-3.5-turbo",
-      "messages": [
-        {"role": "user", "content": "what is flutter"}
-      ],
-      "temperature": 0.7
-    });
-    var result =
-        await http.post(parsedUri, headers: headerData, body: bodyData);
-
-    print(result.body);
   }
 }

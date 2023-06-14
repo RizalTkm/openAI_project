@@ -1,6 +1,7 @@
 import 'package:chat_gpt_application/constants/api_helpers.dart';
 import 'package:chat_gpt_application/constants/colors.dart';
 import 'package:chat_gpt_application/constants/fonts.dart';
+import 'package:chat_gpt_application/presentation/home/widgets/bottomsheet.dart';
 import 'package:chat_gpt_application/presentation/home/widgets/chat_widget.dart';
 import 'package:chat_gpt_application/presentation/home/widgets/send_icon_button.dart';
 import 'package:chat_gpt_application/presentation/home/widgets/textformfield_widget.dart';
@@ -48,21 +49,10 @@ class HomeScreen extends StatelessWidget {
                 backgroundImage: AssetImage(AssetManager.aiImage),
               ),
             ),
-            actions: [
+            actions: const [
               Padding(
                 padding: EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  child: Icon(
-                    Icons.menu_open_sharp,
-                  ),
-                  onTap: () async {
-                    print("button pressed");
-
-                    //await  ApiServices().getAiModels();
-                   // await ApiServices.getAiModelsHttp();
-                   await ApiServices.getQueryResponse();
-                  },
-                ),
+                child: const bottomSheetButton(),
               )
             ],
           )),
