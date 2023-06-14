@@ -1,7 +1,7 @@
-
+import 'dart:convert';
 
 import 'package:chat_gpt_application/constants/api_helpers.dart';
-import 'package:chat_gpt_application/models/aiModels_response_model.dart';
+
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,20 +21,35 @@ class ApiServices {
     }
   }
 
-
   static getAiModelsHttp() async {
-    
+    var parsedUri = Uri.parse("$baseUrl/models");
+    var headerData = {'Authorization': 'Bearer $OPENAI_API_KEY'};
 
-    try {
-      var response = await http.get(Uri.parse("$baseUrl/models"),
-      headers:{'Authorization': 'Bearer $apikeys'} );
+    var result = await http.get(parsedUri, headers: headerData);
 
-      print(response.body);
-    } catch (e) {
-
-      print(e);
-      
+    if (result.statusCode == 200) {
+      print(result.body);
+    } else {
+      print(result.statusCode);
     }
+  }
 
+  static getQueryResponse() async {
+    var parsedUri = Uri.parse("$baseUrl/chat/completions");
+    var headerData = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $OPENAI_API_KEY"
+    };
+    var bodyData = jsonEncode({
+      "model": "gpt-3.5-turbo",
+      "messages": [
+        {"role": "user", "content": "what is flutter"}
+      ],
+      "temperature": 0.7
+    });
+    var result =
+        await http.post(parsedUri, headers: headerData, body: bodyData);
+
+    print(result.body);
   }
 }

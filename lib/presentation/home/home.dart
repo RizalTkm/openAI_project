@@ -1,3 +1,4 @@
+import 'package:chat_gpt_application/constants/api_helpers.dart';
 import 'package:chat_gpt_application/constants/colors.dart';
 import 'package:chat_gpt_application/constants/fonts.dart';
 import 'package:chat_gpt_application/presentation/home/widgets/chat_widget.dart';
@@ -9,9 +10,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  getAiModelsHttp() async {
+    try {
+      var result = await http.get(Uri.parse("$baseUrl/models"),
+          headers: {'Authorization': 'Bearer $OPENAI_API_KEY'});
+
+      if (result.statusCode == 200) {
+        print(result.body);
+      } else {
+        print(result.statusCode);
+      }
+
+      // print(result.body);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +55,12 @@ class HomeScreen extends StatelessWidget {
                   child: Icon(
                     Icons.menu_open_sharp,
                   ),
-                  onTap: () async  {
-
+                  onTap: () async {
                     print("button pressed");
 
-                  //   ApiServices().getAiModels();
-                 await  ApiServices.getAiModelsHttp(); 
+                    //await  ApiServices().getAiModels();
+                   // await ApiServices.getAiModelsHttp();
+                   await ApiServices.getQueryResponse();
                   },
                 ),
               )
